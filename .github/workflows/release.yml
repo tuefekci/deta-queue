@@ -14,3 +14,7 @@ jobs:
     uses: ryansonshine/ryansonshine/.github/workflows/release.yml@main
     secrets:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    env:
+      DETA_PROJECT_KEY: ${{ secrets.DETA_PROJECT_KEY }}
+      TS_NODE_IGNORE: "false"
+      TS_NODE_FILES: "true"
