@@ -1,3 +1,3 @@
-export const myPackage = (taco = ''): string => `${taco} from my package`;
+import QueueLib from "./Queue";
 
-export const World = (taco = ''): string => `${taco}, The World is yours!`;
+export const Queue = QueueLib;
