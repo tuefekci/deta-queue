@@ -8,7 +8,7 @@ const deta = Deta(process.env.DETA_PROJECT_KEY);
 
 describe('Queue', () => {
 	describe('Construct', () => {
-		it('should return Queue Object', async() => {
+		it('should return Queue Object', () => {
 			const queue = new Queue(deta);
 			expect(typeof queue).toBe("object");
 		});
