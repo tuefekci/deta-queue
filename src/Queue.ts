@@ -1,5 +1,5 @@
 import { resolve } from "dns";
-
+import { Deta } from 'deta';
 var sample = require('lodash/sample');
 
 export default class Queue {
@@ -100,7 +100,7 @@ export default class Queue {
         next();
     }
 
-	private async emptyBase(base) {
+	private async emptyBase(base: any): Promise<void>  {
 		let res = await base.fetch();
 		let allItems = res.items;
 		
