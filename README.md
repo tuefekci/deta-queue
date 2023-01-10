@@ -8,7 +8,7 @@
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
-> My awesome module
+> Queue for use with deta base.
 
 ## Install
 
@@ -49,7 +49,7 @@ main();
 
 ## API
 
-### myPackage(deta: Deta, ttl?: number = 60*60*24*14, queueName?: string = "queue")
+### Queue(deta: Deta, ttl?: number = 60*60*24*14, queueName?: string = "queue")
 
 #### deta
 
