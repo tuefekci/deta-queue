@@ -1,43 +1,16 @@
+# Reusable workflow for releases; to eject, you can replace this file with
+# https://github.com/ryansonshine/ryansonshine/blob/main/.github/workflows/release.yml
 name: Release
 on:
-  workflow_call:
-    secrets:
-      NPM_TOKEN:
-        required: true
-      DETA_PROJECT_KEY:
-        required: true
-
+  push:
+    branches:
+      - main
 jobs:
   release:
-    name: Release
-    runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
       pull-requests: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - name: Install dependencies
-        run: npm ci
-      - name: Test
-        env:
-          DETA_PROJECT_KEY: ${{ secrets.DETA_PROJECT_KEY }}
-          TS_NODE_IGNORE: "false"
-          TS_NODE_FILES: "true"
-        run: npm test
-      - name: Build
-        run: npm run build
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
-      - name: Upload Code Coverage
-        uses: codecov/codecov-action@v3.1.0
+    uses: ryansonshine/ryansonshine/.github/workflows/release.yml@main
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
