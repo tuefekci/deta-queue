@@ -79,26 +79,26 @@ export default class Queue {
         return undefined; 
     }
 
-    async process(worker: (item: any) => void, concurrency = 1): Promise<void> {
-        let running = 0;
-
-        const next = async () => {
-            if (running < concurrency) {
-                running++;
-
-                const item = await this.pop();
-                if (item) {
-                    await worker(item);
-                    running--;
-                    next();
-                } else {
-                    running--;
-                }
-            }
-        };
-
-        next();
-    }
+	async process(queue:string, worker: (item: any) => void, concurrency = 1): Promise<void> {
+		let running = 0;
+	
+		const next = async () => {
+			if (running < concurrency) {
+				running++;
+	
+				const item = await this.pop(concurrency*5, queue);
+				if (item) {
+					await worker(item);
+					running--;
+					next();
+				} else {
+					running--;
+				}
+			}
+		};
+	
+		next();
+	}
 
 	private async emptyBase(base: any): Promise<void>  {
 		let res = await base.fetch();
