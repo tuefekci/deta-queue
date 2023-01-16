@@ -1,5 +1,5 @@
 import { Deta } from 'deta';
-import sample from 'lodash/sample';
+var sample = require('lodash/sample');
 
 export default class Queue {
     private queueBase: any;
@@ -7,7 +7,7 @@ export default class Queue {
     private statBase: any;
     private ttl: number;
 
-    constructor(deta: typeof Deta, ttl = 60 * 60 * 24 * 14, queueName = "queue") {
+    constructor(deta: any, ttl = 60 * 60 * 24 * 14, queueName = "queue") {
         this.queueBase = deta.Base(queueName);
         this.logBase = deta.Base(`${queueName}Log`);
         this.statBase = deta.Base(`${queueName}Stat`);
@@ -84,12 +84,12 @@ export default class Queue {
 		// Continue fetching items using the last property as a cursor
 		// until the last property is not seen
 		while (res.last){
-		res = await base.fetch({}, {last: res.last});
-		allItems = allItems.concat(res.items);
+			res = await base.fetch({}, {last: res.last});
+			allItems = allItems.concat(res.items);
 		}
 
 		// Delete all items in parallel
-		await Promise.all(allItems.map(item => base.delete(item.key)));
+		await Promise.all(allItems.map((item: any) => base.delete(item.key)));
 	}
 
 
