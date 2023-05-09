@@ -25,12 +25,11 @@ export default class Queue {
 	}
 
 	async generateStatBaseObject(queue:string) {
-		let exists = await this.statBase.get(queue);
-
-		if(!exists) {
-			await this.statBase.insert({}, queue);
+		try {
+			await this.statBase.get(queue);
+		} catch (error) {
+			this.statBase.insert({}, queue);
 		}
-
 	}
 
 	async push(item: any, queue: string = "deta-queue-default"): Promise<void> {
