@@ -173,7 +173,7 @@ const { Deta } = require('deta'); // import Deta
       await queue.push(item, queueName);
   
       expect(queueBaseMock.put).toHaveBeenCalledWith({ timestamp: expect.any(Number), queue: queueName, payload: item }, expect.any(String), { expireIn: expect.any(Number) });
-      //expect(statBaseMock.insert).toHaveBeenCalledWith({}, queueName);
+      expect(statBaseMock.insert).toHaveBeenCalledWith({}, queueName);
       expect(statBaseMock.update).toHaveBeenCalledWith({ lastPush: expect.any(Number) }, queueName);
     });
   });

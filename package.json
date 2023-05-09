@@ -1,6 +1,6 @@
 {
   "name": "deta-queue",
-  "version": "0.0.3-development",
+  "version": "0.0.4-development",
   "description": "A template for creating npm packages using TypeScript and VSCode",
   "main": "./lib/index.js",
   "files": [
