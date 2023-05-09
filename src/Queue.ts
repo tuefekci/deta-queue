@@ -28,7 +28,7 @@ export default class Queue {
 		try {
 			await this.statBase.get(queue);
 		} catch (error) {
-			this.statBase.insert({}, queue);
+			await this.statBase.insert({}, queue);
 		}
 	}
 
