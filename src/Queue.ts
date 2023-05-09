@@ -24,14 +24,13 @@ export default class Queue {
 		return `${BigInt(8.64e15) - BigInt(Date.now())}`;
 	}
 
-	async generateStatBaseKeyForQueue(queue) {
+	async generateStatBaseObject(queue:string) {
 		let exists = await this.statBase.get(queue);
 
 		if(!exists) {
 			await this.statBase.insert({}, queue);
 		}
 
-		return Promise.resolve();
 	}
 
 	async push(item: any, queue: string = "deta-queue-default"): Promise<void> {
@@ -41,7 +40,7 @@ export default class Queue {
 		// Update the lastPush timestamp and increment the items count in the statBase
 		await Promise.all([
 			this.queueBase.put({timestamp: Date.now(), queue: queue, payload: item}, this.generateLowKey(), {expireIn: this.ttl}),
-			this.generateStatBaseKeyForQueue(queue),
+			this.generateStatBaseObject(queue),
 			this.statBase.update({lastPush: Date.now(), items: this.statBase.util.increment(1)}, queue)
 		]);
 	}
@@ -57,7 +56,7 @@ export default class Queue {
 			// Perform all the database operations in parallel
 			await Promise.all([
 				this.queueBase.delete(item.key), // remove item from the queue
-				this.generateStatBaseKeyForQueue(queue), // insert a new record
+				this.generateStatBaseObject(queue), // insert a new record
 				this.statBase.update({lastPop: Date.now(), items: this.statBase.util.increment(-1)}, queue, {}), // update the stat base
 				this.logBase.put({timestamp: Date.now(), queue: item.queue, payload: item.payload}, this.generateHighKey()) // log the item
 			]);

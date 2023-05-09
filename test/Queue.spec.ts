@@ -140,6 +140,7 @@ const { Deta } = require('deta'); // import Deta
         delete: jest.fn(),
       };
       statBaseMock = {
+        get: jest.fn(),
         put: jest.fn(),
         insert: jest.fn(),
         update: jest.fn(),
