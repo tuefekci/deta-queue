@@ -35,7 +35,7 @@ export default class Queue {
 					});
 				}
 			});
-		}
+		});
 	}
 
 	async push(item: any, queue: string = "deta-queue-default"): Promise<void> {
