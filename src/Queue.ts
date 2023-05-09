@@ -24,6 +24,20 @@ export default class Queue {
 		return `${BigInt(8.64e15) - BigInt(Date.now())}`;
 	}
 
+	generateStatBaseKeyForQueue(queue) {
+		return new Promise((resolve) => {
+			this.statBase.get(queue).then((res) => {
+				if(res) {
+					resolve(res);
+				} else {
+					this.statBase.insert({}, queue).then((res) => {
+						resolve(res);
+					});
+				}
+			});
+		}
+	}
+
 	async push(item: any, queue: string = "deta-queue-default"): Promise<void> {
 		// Perform all the database operations in parallel
 		// Insert the item into the queueBase
@@ -31,7 +45,7 @@ export default class Queue {
 		// Update the lastPush timestamp and increment the items count in the statBase
 		await Promise.all([
 			this.queueBase.put({timestamp: Date.now(), queue: queue, payload: item}, this.generateLowKey(), {expireIn: this.ttl}),
-			this.statBase.insert({}, queue),
+			this.generateStatBaseKeyForQueue(queue),
 			this.statBase.update({lastPush: Date.now(), items: this.statBase.util.increment(1)}, queue)
 		]);
 	}
@@ -47,7 +61,7 @@ export default class Queue {
 			// Perform all the database operations in parallel
 			await Promise.all([
 				this.queueBase.delete(item.key), // remove item from the queue
-				this.statBase.insert({}, queue), // insert a new record
+				this.generateStatBaseKeyForQueue(queue), // insert a new record
 				this.statBase.update({lastPop: Date.now(), items: this.statBase.util.increment(-1)}, queue, {}), // update the stat base
 				this.logBase.put({timestamp: Date.now(), queue: item.queue, payload: item.payload}, this.generateHighKey()) // log the item
 			]);
@@ -91,7 +105,6 @@ export default class Queue {
 		// Delete all items in parallel
 		await Promise.all(allItems.map((item: any) => base.delete(item.key)));
 	}
-
 
 	async empty(): Promise<void> {
 		// Run `emptyBase` function on both `queueBase` and `statBase` in parallel
