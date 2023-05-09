@@ -24,18 +24,14 @@ export default class Queue {
 		return `${BigInt(8.64e15) - BigInt(Date.now())}`;
 	}
 
-	generateStatBaseKeyForQueue(queue) {
-		return new Promise((resolve) => {
-			this.statBase.get(queue).then((res) => {
-				if(res) {
-					resolve(res);
-				} else {
-					this.statBase.insert({}, queue).then((res) => {
-						resolve(res);
-					});
-				}
-			});
-		});
+	async generateStatBaseKeyForQueue(queue) {
+		let exists = await this.statBase.get(queue);
+
+		if(!exists) {
+			await this.statBase.insert({}, queue);
+		}
+
+		return Promise.resolve();
 	}
 
 	async push(item: any, queue: string = "deta-queue-default"): Promise<void> {
